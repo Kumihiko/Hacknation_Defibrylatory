@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dane – Misja AED</title>
+  <meta name="description" content="Otwarty, zintegrowany zbiór danych o defibrylatorach AED w Polsce – pobieranie, źródła, licencje.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#tresc">Przejdź do treści</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Misja AED – strona główna">
+      <img src="img/favicon.svg" alt="" width="32" height="32">
+      <span class="brand-name">Misja AED</span>
+    </a>
+    <nav class="topnav" aria-label="Główna nawigacja">
+      <a href="./">Mapa</a>
+      <a href="dane.html" aria-current="page">Dane</a>
+    </nav>
+    <a class="call-112" href="tel:112"><span>Zadzwoń 112</span></a>
+  </header>
+
+  <main id="tresc" class="page">
+    <h1>Otwarte dane o defibrylatorach AED</h1>
+    <p>Zbiór budowany automatycznie z wielu źródeł. Dane są ujednolicane do
+      <strong>wzorcowego zakresu danych</strong>, deduplikowane i publikowane w formatach zgodnych ze
+      Standardem technicznym portalu <a href="https://dane.gov.pl">dane.gov.pl</a>. Aktualizacja codzienna.</p>
+    <p id="generated" class="muted" role="status">Wczytuję statystyki…</p>
+
+    <section aria-labelledby="h-liczby">
+      <h2 id="h-liczby">W liczbach</h2>
+      <div class="cards" id="cards"></div>
+    </section>
+
+    <section aria-labelledby="h-pobierz">
+      <h2 id="h-pobierz">Pobierz</h2>
+      <div class="downloads">
+        <a class="btn" href="dane/aed.csv" download>CSV</a>
+        <a class="btn" href="dane/aed.geojson" download>GeoJSON</a>
+        <a class="btn" href="dane/aed.xlsx" download>XLSX</a>
+        <a class="btn" href="dane/wzorcowy-zakres-danych-AED.xlsx" download>Wzorcowy zakres danych (XLSX)</a>
+        <a class="btn" href="dane/aed.csv-metadata.json">Metadane CSVW</a>
+        <a class="btn" href="dane/aed.schema.json">Schemat (Table Schema)</a>
+        <a class="btn" href="dane/danegov-import.xml">Plik importu dane.gov.pl (XML)</a>
+      </div>
+      <p class="hint">Plik XML jest zgodny ze schematem harwestera dane.gov.pl
+        (<code>urn:otwarte-dane:harvester:1.13</code>) – portal może pobierać zbiór automatycznie.</p>
+    </section>
+
+    <section aria-labelledby="h-zrodla">
+      <h2 id="h-zrodla">Źródła</h2>
+      <div class="table-wrap">
+        <table>
+          <caption class="visually-hidden">Źródła danych, licencje i liczba rekordów</caption>
+          <thead><tr><th scope="col">Źródło</th><th scope="col">Licencja</th><th scope="col">Rekordów</th>
+            <th scope="col">Z godzinami</th><th scope="col">Status</th></tr></thead>
+          <tbody id="sources"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-klasy">
+      <h2 id="h-klasy">Dostępność AED w zbiorze</h2>
+      <div class="table-wrap">
+        <table>
+          <caption class="visually-hidden">Liczba AED w poszczególnych klasach dostępności</caption>
+          <thead><tr><th scope="col">Klasa</th><th scope="col">Znaczenie</th><th scope="col">Liczba</th></tr></thead>
+          <tbody id="classes"></tbody>
+        </table>
+      </div>
+      <p>Aplikacja prowadzi tylko do AED z klas „całodobowy”, „prawdopodobnie całodobowy” oraz „godziny” (gdy są otwarte).
+        <strong id="unknown-count"></strong></p>
+    </section>
+
+    <section aria-labelledby="h-licencja">
+      <h2 id="h-licencja">Licencja i atrybucja</h2>
+      <p>Zbiór zawiera dane OpenStreetMap, dlatego jest udostępniany na licencji
+        <a href="https://opendatacommons.org/licenses/odbl/1-0/">Open Database License (ODbL) 1.0</a>.
+        © współtwórcy OpenStreetMap. Dane samorządów pochodzą ze zbiorów na licencjach CC0 1.0 i CC BY 4.0 –
+        źródło każdego rekordu podają kolumny <code>zrodla</code> i <code>zrodlo_licencja</code>.</p>
+      <ul id="attribution"></ul>
+    </section>
+  </main>
+
+  <script src="dane.js"></script>
+</body>
+</html>

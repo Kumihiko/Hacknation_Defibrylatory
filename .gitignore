@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+data/raw/
+dist/
+*.egg-info/
+*.crdownload
+# generowane przez `aed run` (publikowane przez GitHub Actions)
+web/data/
+web/dane/

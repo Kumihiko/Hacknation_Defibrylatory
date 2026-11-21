@@ -1,0 +1,28 @@
+[project]
+name = "misja-aed"
+version = "0.1.0"
+description = "Agregator otwartych danych o defibrylatorach AED dla dane.gov.pl oraz aplikacja 'najbliższy dostępny AED'"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "pyyaml>=6.0",
+    "rapidfuzz>=3.0",
+    "openpyxl>=3.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "lxml>=5.0"]
+
+[project.scripts]
+aed = "aed.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["aed*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

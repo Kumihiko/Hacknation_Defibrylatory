@@ -1,0 +1,38 @@
+# Ustawienia ogólne pipeline'u.
+# publish_base_url: adres, pod którym GitHub Pages serwuje katalog web/ (bez końcowego "/").
+# Uzupełnij po utworzeniu repozytorium, np. https://<uzytkownik>.github.io/<repozytorium>
+publish_base_url: "https://example.github.io/misja-aed"
+
+dataset:
+  ext_ident: "misja-aed-defibrylatory-pl"
+  title_pl: "Defibrylatory AED w Polsce – zbiór zintegrowany"
+  title_en: "AED defibrillators in Poland – integrated dataset"
+  description_pl: >-
+    Zintegrowany zbiór danych o lokalizacji i dostępności automatycznych defibrylatorów zewnętrznych (AED)
+    w Polsce, zbudowany automatycznie z wielu otwartych źródeł (OpenStreetMap, portale otwartych danych
+    samorządów). Rekordy z różnych źródeł są łączone i deduplikowane, a każdy zawiera informację o źródle,
+    licencji i dacie danych. Zakres danych zgodny ze wzorcem Misja AED.
+  description_en: >-
+    Integrated dataset of locations and availability of automated external defibrillators (AED) in Poland,
+    built automatically from multiple open sources (OpenStreetMap, municipal open data portals). Records are
+    merged and deduplicated; each carries its source, licence and data date.
+  category: "HEAL"
+  tags_pl: ["defibrylator", "AED", "pierwsza pomoc", "ratownictwo", "zdrowie"]
+  tags_en: ["defibrillator", "AED", "first aid", "emergency", "health"]
+  # dane.gov.pl (XSD harvester 1.13) przyjmuje w polu licencji tylko licencje CC.
+  # Zbiór zawiera dane OSM (ODbL 1.0), więc warunki opisujemy tekstowo w <dbOrCopyrighted>.
+  conditions_text: >-
+    Zbiór zawiera dane z OpenStreetMap udostępniane na licencji Open Database License (ODbL) 1.0
+    (https://opendatacommons.org/licenses/odbl/1-0/) – © współtwórcy OpenStreetMap. Zbiór pochodny
+    udostępniany jest na tej samej licencji ODbL 1.0. Dane samorządów pochodzą ze zbiorów na licencjach
+    CC0 1.0 i CC BY 4.0; wymagane uznanie autorstwa znajduje się w kolumnach "zrodla" i "zrodlo_licencja"
+    oraz w pliku zrodla.json.
+
+dedupe:
+  max_distance_m: 40        # maksymalna odległość kandydatów na duplikat
+  auto_merge_distance_m: 12 # poniżej tej odległości łączymy bez porównania nazw
+  name_similarity: 70       # próg rapidfuzz token_set_ratio (0-100)
+
+availability:
+  # Ile sekund dłużej wolno iść do AED "pewnego 24/7" zamiast do "wnioskowanego 24/7" (używane w web/).
+  prefer_certain_within_s: 60

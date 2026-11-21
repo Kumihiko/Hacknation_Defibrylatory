@@ -1,0 +1,220 @@
+# Rejestr źródeł danych o AED.
+#
+# Każde źródło: id, nazwa, wydawca, konektor, url, licencja (SPDX lub NIEZNANA), atrybucja,
+# priorytet (wyższy = ważniejszy przy łączeniu duplikatów), enabled.
+# Źródła z licencją NIEZNANA mają enabled: false do czasu potwierdzenia licencji przez zespół.
+#
+# mapping: pole_schematu -> nazwa pola w źródle
+#   albo {field: <pole>, regex: <wyrażenie z jedną grupą>}  (wyciąga fragment)
+#   albo {const: <wartość>}                                   (stała wartość)
+#   albo {join: [<pole>, <pole>, ...], sep: " "}             (sklejenie pól)
+# Pola zaczynające się od "_" są pomocnicze (np. _adres_tekst – adres w jednym polu do rozbicia).
+
+sources:
+
+  - id: osm
+    name: OpenStreetMap (przez OpenAEDMap)
+    publisher: Współtwórcy OpenStreetMap / Stowarzyszenie OpenStreetMap Polska
+    connector: openaedmap
+    url: https://openaedmap.org/api/v1/countries/PL.geojson
+    homepage: https://openaedmap.org
+    license: ODbL-1.0
+    attribution: "© współtwórcy OpenStreetMap (ODbL 1.0)"
+    scope: krajowy
+    priority: 10
+    enabled: true
+
+  - id: um_warszawa
+    name: Lokalizacja defibrylatorów (AED) – m.st. Warszawa
+    publisher: Urząd m.st. Warszawy – Stołeczne Centrum Bezpieczeństwa
+    connector: warszawa
+    url: https://dane.um.warszawa.pl/api/action/get_scb_lokalizacja_defibrylatorow
+    token_env: WAW_API_TOKEN
+    # Gdy brak tokenu: publiczna kopia tych samych danych (Esri Polska, warunki źródła = CC BY m.st. Warszawy)
+    fallback_url: https://services.arcgis.com/zg6BBB0wvjzrRBLk/arcgis/rest/services/AED/FeatureServer/0
+    homepage: https://dane.gov.pl/pl/dataset/39512
+    license: CC-BY-4.0
+    attribution: "Urząd m.st. Warszawy – Stołeczne Centrum Bezpieczeństwa (CC BY)"
+    priority: 90
+    enabled: true
+
+  - id: legionowo
+    name: Wykaz defibrylatorów AED w Legionowie
+    publisher: Urząd Miasta Legionowo
+    connector: csv
+    url: https://api.dane.gov.pl/media/resources/20260914/aed.csv
+    homepage: https://dane.gov.pl/pl/dataset/40593
+    license: CC0-1.0
+    attribution: "Urząd Miasta Legionowo (CC0 1.0)"
+    priority: 80
+    enabled: true
+    mapping:
+      nazwa_obiektu: nazwa
+      ulica_cecha: cecha_ulicy
+      ulica_nazwa: nazwa_ulicy
+      nr_budynku: nr_budynku
+      nr_lokalu: nr_lokalu
+      kod_pocztowy: kod_pocztowy
+      miejscowosc: miejscowosc
+      kod_terc: kod_terc
+      kod_simc: kod_simc
+      szerokosc_geo: szerokosc_geograficzna
+      dlugosc_geo: dlugosc_geograficzna
+
+  - id: krosno
+    name: Defibrylatory zlokalizowane w Mieście Krosno
+    publisher: Urząd Miasta Krosna
+    connector: csv
+    url: https://api.dane.gov.pl/media/resources/20240219/Defibrylator_jAmxQcp.csv
+    homepage: https://dane.gov.pl/pl/dataset/3624
+    license: CC0-1.0
+    attribution: "Urząd Miasta Krosna (CC0 1.0)"
+    priority: 80
+    enabled: true
+    mapping:
+      nazwa_obiektu: Lokalizacja
+      _adres_tekst: Adres
+      szerokosc_geo: Szerokość geograficzna
+      dlugosc_geo: Długość geograficzna
+
+  - id: marki
+    name: Defibrylatory zlokalizowane na terenie Miasta Marki
+    publisher: Urząd Miasta Marki
+    connector: csv
+    url: https://api.dane.gov.pl/media/resources/20250710/Defibrylator_GminaMiastoMarki_1.csv
+    homepage: https://dane.gov.pl/pl/dataset/4955
+    license: CC-BY-4.0
+    attribution: "Urząd Miasta Marki (CC BY 4.0)"
+    priority: 80
+    enabled: true
+    unwrap_quoted_lines: true   # w pliku każdy wiersz jest w całości ujęty w cudzysłów
+    mapping:
+      nazwa_obiektu: Lokalizacja
+      _adres_tekst: Adres
+      szerokosc_geo: Szerokość geograficzna
+      dlugosc_geo: Długość geograficzna
+
+  - id: przemysl
+    name: Lokalizacje AED w Przemyślu
+    publisher: Urząd Miejski w Przemyślu
+    connector: geojson
+    url: https://przemysl.skycms.com.pl/open-data/20/1730818801_b50R6UVxPgoVdBbq/geojson
+    homepage: https://dane.gov.pl/pl/dataset/4581
+    license: CC0-1.0
+    attribution: "Urząd Miejski w Przemyślu (CC0 1.0)"
+    priority: 80
+    enabled: true
+    mapping:
+      nazwa_obiektu: {field: name, regex: "^Defibrylator.*?\\bw\\s+(.+)$"}
+      ulica_nazwa: street
+      nr_budynku: home_number
+      kod_pocztowy: postcode
+      miejscowosc: city
+      dysponent_telefon: phone
+
+  # ---------- źródła o nieznanej licencji (włączyć po potwierdzeniu) ----------
+
+  - id: sopot
+    name: Defibrylatory AED – Sopot
+    publisher: Gmina Miasta Sopotu
+    connector: geojson
+    url: https://otwartedane.sopot.pl/?api=plik&k=zdrowie-i-pomoc-spoleczna&z=defibrylatory-aed&f=defibrylatory.geojson
+    homepage: https://otwartedane.sopot.pl/
+    crs: EPSG:2180
+    license: NIEZNANA
+    attribution: "Gmina Miasta Sopotu"
+    priority: 80
+    enabled: false
+    mapping:
+      nazwa_obiektu: Nazwa
+      ulica_cecha: ul.
+      ulica_nazwa: Nazwa ulicy
+      nr_budynku: Numer
+      kod_pocztowy: Kod PNA
+      miejscowosc: Miejscowość
+      opis_lokalizacji: Lokalizacja
+      godziny_opis_zrodlowy: Godziny dotępności
+
+  - id: inpost
+    name: InPost Helpbox 365 – AED przy paczkomatach
+    publisher: InPost S.A. / Centrum Ratownictwa
+    connector: geojson
+    url: https://inpost.pl/aed-points
+    homepage: https://inpost.pl/aed
+    license: NIEZNANA
+    attribution: "InPost Helpbox 365"
+    scope: krajowy
+    priority: 70
+    enabled: false
+    mapping:
+      nazwa_obiektu: {join: ["Paczkomat InPost", name], sep: " "}
+      _adres_tekst: {join: [address_1, address_2], sep: ", "}
+      opis_lokalizacji: location_description
+      godziny_opis_zrodlowy: {const: "24/7"}
+      typ_dostepu: {const: publiczny}
+      wewnatrz_budynku: {const: false}
+      dysponent_nazwa: {const: "InPost S.A."}
+
+  - id: lodz
+    name: Mapa defibrylatorów AED – Łódź
+    publisher: Urząd Miasta Łodzi
+    connector: kml
+    url: https://www.google.com/maps/d/kml?mid=1FMKFbebKJPYqD4C87pXWPqNjEHuEswE&forcekml=1
+    homepage: https://uml.lodz.pl/dla-mieszkancow/zdrowie/mapa-defibrylatorow-aed/
+    license: NIEZNANA
+    attribution: "Urząd Miasta Łodzi"
+    priority: 80
+    enabled: false
+    mapping:
+      _adres_tekst: {field: name, regex: "^defibrylator\\s*-\\s*(.+)$"}
+      nazwa_obiektu: {field: description, regex: "^\\s*\\d*\\s*([^<]+)"}
+      opis_lokalizacji: {field: description, regex: "<br>(.+)$"}
+      godziny_opis_zrodlowy: {field: description, regex: "<br>(.+)$"}
+    defaults:
+      miejscowosc: Łódź
+
+  - id: gdansk
+    name: Defibrylatory w Gdańsku (stan 2022)
+    publisher: Urząd Miejski w Gdańsku – Wydział Bezpieczeństwa i Zarządzania Kryzysowego
+    connector: gdansk_html
+    url: https://www.gdansk.pl/wiadomosci/Defibrylatory,a,216952
+    homepage: https://www.gdansk.pl/wiadomosci/Defibrylatory,a,216952
+    data_date: "2022-02-25"
+    license: NIEZNANA
+    attribution: "Urząd Miejski w Gdańsku"
+    priority: 75
+    enabled: false
+
+  - id: krakow_zpgis
+    name: AED – Kraków (ZPGIS, aktualizacja 2023-11)
+    publisher: Gmina Miejska Kraków (ZPGIS)
+    connector: arcgis
+    url: https://services-eu1.arcgis.com/svTzSt3AvH7sK6q9/arcgis/rest/services/AED_zestawy_2022_sierpien/FeatureServer/0
+    homepage: https://www.arcgis.com/home/item.html?id=95c46c69fded4a09a96313a63f1bcd50
+    license: NIEZNANA
+    attribution: "Gmina Miejska Kraków"
+    priority: 80
+    enabled: false
+    mapping:
+      nazwa_obiektu: nazwa
+      ulica_nazwa: ulica
+      nr_budynku: nr
+      kod_pocztowy: kod
+      miejscowosc: miasto
+
+  - id: krakow_arcgis_prywatne
+    name: AED zestawy – Kraków (konto ArcGIS, wydawca nieustalony)
+    publisher: nieustalony
+    connector: arcgis
+    url: https://services6.arcgis.com/w8Sm3ehkmwzR6bQc/arcgis/rest/services/AED_zestawy/FeatureServer/0
+    homepage: https://www.arcgis.com/home/item.html?id=cbd2aa03bc994b7490aabcbdb4867959
+    license: NIEZNANA
+    attribution: "nieustalony"
+    priority: 60
+    enabled: false
+    mapping:
+      nazwa_obiektu: lokalizacj
+      _adres_tekst: ulica
+      miejscowosc: miasto
+      opis_lokalizacji: uwagi
+      godziny_opis_zrodlowy: uwagi
