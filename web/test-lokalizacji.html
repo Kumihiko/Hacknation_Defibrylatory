@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test lokalizacji – HeartSpot</title>
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css?v=4">
+</head>
+<body>
+  <main class="page">
+    <h1>Test lokalizacji telefonu</h1>
+    <p>Strona pokazuje surowe odczyty położenia, które telefon przekazuje przeglądarce – bez logiki HeartSpot.
+      Pomaga ustalić, czy złe położenie pochodzi z telefonu (Wi-Fi / sieć), czy z aplikacji.</p>
+    <p><button class="btn btn-primary" id="start" type="button">Rozpocznij test (30 s)</button></p>
+    <p id="info" role="status" aria-live="polite" class="muted"></p>
+    <div class="table-wrap">
+      <table>
+        <caption class="visually-hidden">Odczyty położenia</caption>
+        <thead><tr><th scope="col">Czas</th><th scope="col">Tryb</th><th scope="col">Szer., dł.</th>
+          <th scope="col">Dokładność</th><th scope="col">Wiek odczytu</th><th scope="col">Do Bydgoszczy</th><th scope="col">Do Krakowa</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="hint">„sieć” = szybki odczyt (Wi-Fi/komórka/IP), „GPS” = odczyt wysokiej dokładności.
+      Jeśli już odczyt „sieć” wskazuje złe miasto, przyczyną są ustawienia lub sieć telefonu, nie aplikacja.</p>
+    <p><a href="./">Wróć do mapy</a></p>
+  </main>
+  <script>
+    (() => {
+      const R = 6371;
+      const dist = (a, b, c, d) => {
+        const t = Math.PI / 180;
+        const h = Math.sin((c - a) * t / 2) ** 2 + Math.cos(a * t) * Math.cos(c * t) * Math.sin((d - b) * t / 2) ** 2;
+        return 2 * R * Math.asin(Math.sqrt(h));
+      };
+      const rows = document.getElementById('rows');
+      const info = document.getElementById('info');
+      const t0 = Date.now();
+      function add(mode, pos, err) {
+        const tr = document.createElement('tr');
+        const cells = err
+          ? [`${((Date.now() - t0) / 1000).toFixed(1)} s`, mode, `błąd ${err.code}: ${err.message}`, '', '', '', '']
+          : [
+            `${((Date.now() - t0) / 1000).toFixed(1)} s`, mode,
+            `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`,
+            `±${Math.round(pos.coords.accuracy)} m`,
+            `${Math.round((Date.now() - pos.timestamp) / 1000)} s`,
+            `${dist(pos.coords.latitude, pos.coords.longitude, 53.1235, 18.0084).toFixed(1)} km`,
+            `${dist(pos.coords.latitude, pos.coords.longitude, 50.0647, 19.945).toFixed(1)} km`,
+          ];
+        for (const c of cells) { const td = document.createElement('td'); td.textContent = c; tr.append(td); }
+        rows.append(tr);
+      }
+      document.getElementById('start').addEventListener('click', () => {
+        if (!('geolocation' in navigator)) { info.textContent = 'Brak API lokalizacji w tej przeglądarce.'; return; }
+        info.textContent = 'Zbieram odczyty przez 30 s…';
+        navigator.geolocation.getCurrentPosition((p) => add('sieć (szybki)', p), (e) => add('sieć (szybki)', null, e),
+          { enableHighAccuracy: false, maximumAge: 120000, timeout: 5000 });
+        navigator.geolocation.getCurrentPosition((p) => add('sieć (świeży)', p), (e) => add('sieć (świeży)', null, e),
+          { enableHighAccuracy: false, maximumAge: 0, timeout: 10000 });
+        const id = navigator.geolocation.watchPosition((p) => add('GPS', p), (e) => add('GPS', null, e),
+          { enableHighAccuracy: true, maximumAge: 0, timeout: 30000 });
+        setTimeout(() => { navigator.geolocation.clearWatch(id); info.textContent = 'Koniec testu – zrób zrzut ekranu tabeli.'; }, 30000);
+      });
+    })();
+  </script>
+</body>
+</html>
