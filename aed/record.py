@@ -108,7 +108,7 @@ def build_record(source: Source, key: str, fields: dict[str, Any], data_date: st
     # --- pochodzenie
     rec["zrodla"] = source.id
     rec["zrodlo_id"] = f"{source.id}:{key}"
-    rec["zrodlo_licencja"] = source.license
+    rec["zrodlo_licencja"] = f.get("_license") or source.license
     rec["data_danych"] = clean(f.get("data_danych")) or source.extra.get("data_date") or data_date
     rec["_hours"] = hours
     rec["_source"] = source

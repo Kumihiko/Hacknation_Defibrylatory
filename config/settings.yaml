@@ -1,17 +1,17 @@
 # Ustawienia ogólne pipeline'u.
 # publish_base_url: adres, pod którym GitHub Pages serwuje katalog web/ (bez końcowego "/").
 # Uzupełnij po utworzeniu repozytorium, np. https://<uzytkownik>.github.io/<repozytorium>
-publish_base_url: "https://example.github.io/misja-aed"
+publish_base_url: "https://example.github.io/heartspot"
 
 dataset:
-  ext_ident: "misja-aed-defibrylatory-pl"
+  ext_ident: "heartspot-defibrylatory-pl"
   title_pl: "Defibrylatory AED w Polsce – zbiór zintegrowany"
   title_en: "AED defibrillators in Poland – integrated dataset"
   description_pl: >-
     Zintegrowany zbiór danych o lokalizacji i dostępności automatycznych defibrylatorów zewnętrznych (AED)
     w Polsce, zbudowany automatycznie z wielu otwartych źródeł (OpenStreetMap, portale otwartych danych
     samorządów). Rekordy z różnych źródeł są łączone i deduplikowane, a każdy zawiera informację o źródle,
-    licencji i dacie danych. Zakres danych zgodny ze wzorcem Misja AED.
+    licencji i dacie danych. Zakres danych zgodny ze wzorcem HeartSpot.
   description_en: >-
     Integrated dataset of locations and availability of automated external defibrillators (AED) in Poland,
     built automatically from multiple open sources (OpenStreetMap, municipal open data portals). Records are

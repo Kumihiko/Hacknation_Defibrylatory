@@ -112,6 +112,18 @@ sources:
       miejscowosc: city
       dysponent_telefon: phone
 
+  - id: danegov
+    name: Zbiory dysponentów AED na dane.gov.pl (wzorcowy zakres HeartSpot)
+    publisher: Dysponenci AED publikujący na dane.gov.pl
+    connector: danegov_standard
+    url: https://api.dane.gov.pl/1.4/search
+    homepage: https://dane.gov.pl/pl/search?q=defibrylator
+    queries: ["defibrylator", "defibrylatory", "AED", "HeartSpot"]
+    license: wg-zbioru   # licencja każdego zbioru brana z dane.gov.pl
+    attribution: "Dysponenci AED – zbiory na dane.gov.pl (licencje wg zbiorów)"
+    priority: 95          # dane od dysponenta są najbardziej wiarygodne
+    enabled: true
+
   # ---------- źródła o nieznanej licencji (włączyć po potwierdzeniu) ----------
 
   - id: sopot
@@ -121,10 +133,11 @@ sources:
     url: https://otwartedane.sopot.pl/?api=plik&k=zdrowie-i-pomoc-spoleczna&z=defibrylatory-aed&f=defibrylatory.geojson
     homepage: https://otwartedane.sopot.pl/
     crs: EPSG:2180
-    license: NIEZNANA
-    attribution: "Gmina Miasta Sopotu"
+    # Portal deklaruje dla swoich zbiorów: „Udostępniane bez ograniczeń licencyjnych” (sprawdzone 2026-11-21)
+    license: BEZ-OGRANICZEN
+    attribution: "Gmina Miasta Sopotu – otwartedane.sopot.pl"
     priority: 80
-    enabled: false
+    enabled: true
     mapping:
       nazwa_obiektu: Nazwa
       ulica_cecha: ul.
@@ -141,7 +154,8 @@ sources:
     connector: geojson
     url: https://inpost.pl/aed-points
     homepage: https://inpost.pl/aed
-    license: NIEZNANA
+    # Strona inpost.pl/aed: „© InPost 2026. Wszelkie prawa zastrzeżone” – nie są to dane otwarte (2026-11-21)
+    license: ZASTRZEZONA
     attribution: "InPost Helpbox 365"
     scope: krajowy
     priority: 70

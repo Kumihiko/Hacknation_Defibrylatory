@@ -1,5 +1,5 @@
 {
-  "$comment": "Wzorcowy zakres danych o defibrylatorach AED (Misja AED). Format: Frictionless Table Schema. Jedno źródło prawdy dla CSV, XLSX, CSVW i walidacji.",
+  "$comment": "Wzorcowy zakres danych o defibrylatorach AED (HeartSpot). Format: Frictionless Table Schema. Jedno źródło prawdy dla CSV, XLSX, CSVW i walidacji.",
   "title": "Wzorcowy zakres danych o defibrylatorach AED",
   "version": "1.0.0",
   "primaryKey": ["id"],

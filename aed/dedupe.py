@@ -138,7 +138,7 @@ def merge(cluster: list[dict]) -> dict:
 
     out["zrodla"] = ";".join(r["_source"].id for r in members)
     out["zrodlo_id"] = ";".join(r["zrodlo_id"] for r in members)
-    out["zrodlo_licencja"] = ";".join(dict.fromkeys(r["_source"].license for r in members))
+    out["zrodlo_licencja"] = ";".join(dict.fromkeys(r["zrodlo_licencja"] for r in members))
     out["data_danych"] = max(r["data_danych"] for r in members)
     dates = [r.get("data_weryfikacji") for r in members if r.get("data_weryfikacji")]
     out["data_weryfikacji"] = max(dates) if dates else None

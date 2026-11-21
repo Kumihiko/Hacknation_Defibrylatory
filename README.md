@@ -1,4 +1,4 @@
-# Misja AED – dane na ratunek
+# HeartSpot – najbliższy dostępny AED i otwarte dane o defibrylatorach
 
 Rozwiązanie zadania „Misja AED – Dane na ratunek” (HackNation 2026, Ministerstwo Cyfryzacji).
 
@@ -8,6 +8,10 @@ Rozwiązanie zadania „Misja AED – Dane na ratunek” (HackNation 2026, Minis
 2. **Aplikacja „najbliższy dostępny AED”.** Po otwarciu od razu wyznacza pieszą trasę do najbliższego
    defibrylatora **dostępnego teraz**: całodobowego albo otwartego według godzin. AED o nieznanym statusie
    pomija, żeby nie prowadzić do zamkniętych drzwi.
+3. **Zakładka „Dodaj AED” dla dysponentów.** Gmina, szkoła albo firma wpisuje swoje AED w formularzu albo wczytuje
+   gotowy plik CSV. Narzędzie sprawdza dane względem wzorcowego zakresu, a geokoder GUGiK uzupełnia kody TERYT.
+   Na koniec dysponent pobiera CSV, GeoJSON i plik importu XML dla dane.gov.pl. Gdy opublikuje zbiór na
+   dane.gov.pl, konektor `danegov` sam go znajdzie i dołączy do HeartSpot, z licencją podaną przy zbiorze.
 
 ## Szybki start
 
@@ -104,7 +108,10 @@ codziennie oraz po każdym pushu do `main`. Adres strony trafia automatycznie do
 | m.st. Warszawa – Stołeczne Centrum Bezpieczeństwa | CC BY | tak |
 | UM Legionowo, UM Krosno, UM Przemyśl | CC0 1.0 | tak |
 | UM Marki | CC BY 4.0 | tak |
-| Sopot, InPost, Łódź, Gdańsk, Kraków | do ustalenia | konektory gotowe, `enabled: false` |
+| UM Sopot (otwartedane.sopot.pl) | portal deklaruje „bez ograniczeń licencyjnych” | tak |
+| Zbiory dysponentów na dane.gov.pl we wzorcowym zakresie (konektor `danegov`) | licencja każdego zbioru | tak (automatycznie) |
+| InPost Helpbox 365 | „wszelkie prawa zastrzeżone” | nie |
+| Łódź, Gdańsk, Kraków (ZPGIS, konto prywatne) | brak informacji o licencji | konektory gotowe, `enabled: false` |
 
 Zbiór zawiera dane OSM, więc jest udostępniany na licencji **ODbL 1.0** (© współtwórcy OpenStreetMap).
 Pole licencji w XSD dane.gov.pl przyjmuje tylko licencje Creative Commons, dlatego warunki ODbL opisujemy w polu
@@ -120,7 +127,7 @@ Pole licencji w XSD dane.gov.pl przyjmuje tylko licencje Creative Commons, dlate
 | lxml, pytest | BSD, MIT | testy (walidacja XSD) |
 | Leaflet 1.9.4 | BSD-2 | mapa (kopia lokalna w `web/vendor`) |
 | Kafelki OpenStreetMap | ODbL / CC BY-SA | podkład mapy |
-| OSRM, serwer FOSSGIS | – | trasy piesze (usługa publiczna) |
+| OSRM (serwer FOSSGIS), zapasowo BRouter (brouter.de) | – | trasy piesze (usługi publiczne; przy awarii OSRM aplikacja przełącza się na BRouter) |
 | GUGiK UUG, Nominatim | – | wyszukiwanie adresu |
 
 ## Ograniczenia

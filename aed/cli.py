@@ -11,7 +11,7 @@ from .pipeline import print_report, run
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(prog="aed", description="Misja AED – agregator otwartych danych o defibrylatorach")
+    parser = argparse.ArgumentParser(prog="aed", description="HeartSpot – agregator otwartych danych o defibrylatorach")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     p_run = sub.add_parser("run", help="pobierz źródła, połącz dane i wygeneruj eksporty")

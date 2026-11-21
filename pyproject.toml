@@ -1,5 +1,5 @@
 [project]
-name = "misja-aed"
+name = "heartspot"
 version = "0.1.0"
 description = "Agregator otwartych danych o defibrylatorach AED dla dane.gov.pl oraz aplikacja 'najbliższy dostępny AED'"
 readme = "README.md"

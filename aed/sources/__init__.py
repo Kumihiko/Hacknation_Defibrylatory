@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import Callable
 
 from ..config import Source
-from . import gdansk, openaedmap, tabular, warszawa
+from . import danegov, gdansk, openaedmap, tabular, warszawa
 
 Rows = list[tuple[str, dict]]
 Connector = Callable[[Source, bool], Rows]
@@ -19,6 +19,7 @@ CONNECTORS: dict[str, Connector] = {
     "arcgis": tabular.fetch_arcgis,
     "kml": tabular.fetch_kml,
     "gdansk_html": gdansk.fetch,
+    "danegov_standard": danegov.fetch,
 }
 
 

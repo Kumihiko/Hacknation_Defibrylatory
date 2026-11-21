@@ -3,23 +3,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Misja AED – najbliższy dostępny defibrylator</title>
+  <title>HeartSpot – najbliższy dostępny defibrylator</title>
   <meta name="description" content="Najbliższy dostępny teraz defibrylator AED i trasa piesza do niego. Otwarte dane o AED z wielu źródeł.">
   <meta name="theme-color" content="#b91c1c">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="vendor/leaflet.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
   <a class="skip-link" href="#panel">Przejdź do wyników</a>
 
   <header class="topbar">
-    <a class="brand" href="./" aria-label="Misja AED – strona główna">
+    <a class="brand" href="./" aria-label="HeartSpot – strona główna">
       <img src="img/favicon.svg" alt="" width="32" height="32">
-      <span class="brand-name">Misja AED</span>
+      <span class="brand-name">HeartSpot</span>
     </a>
     <nav class="topnav" aria-label="Główna nawigacja">
       <a href="./" aria-current="page">Mapa</a>
+      <a href="dodaj.html">Dodaj AED</a>
       <a href="dane.html">Dane</a>
     </nav>
     <a class="call-112" href="tel:112">
@@ -38,6 +39,9 @@
       </div>
 
       <p id="status" class="status" role="status" aria-live="polite">Ustalam Twoją lokalizację…</p>
+
+      <p id="loc-warning" class="warning" role="alert" hidden></p>
+      <div id="drafts-note" class="drafts-note" hidden></div>
 
       <article id="result" class="result" hidden aria-labelledby="result-name">
         <p class="result-eta"><span id="result-time">–</span> <span id="result-dist" class="muted"></span></p>
@@ -80,7 +84,7 @@
         </ul>
         <p>Pokazujemy wyłącznie AED, które według danych są <strong>dostępne teraz</strong>. Urządzenia o nieznanych
           godzinach, prywatne i zamknięte są pominięte, żeby nie prowadzić do zamkniętych drzwi.</p>
-        <p>Trasa piesza: OSRM (FOSSGIS). Dane: <a href="dane.html">zbiór Misja AED</a>, w tym
+        <p>Trasa piesza: OSRM (FOSSGIS), zapasowo BRouter. Dane: <a href="dane.html">zbiór HeartSpot</a>, w tym
           © współtwórcy OpenStreetMap (ODbL).</p>
       </details>
     </section>
@@ -89,6 +93,7 @@
   </main>
 
   <script src="vendor/leaflet.min.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=5"></script>
+  <script src="links.js?v=3"></script>
 </body>
 </html>

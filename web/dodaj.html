@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dodaj AED – HeartSpot</title>
+  <meta name="description" content="Przygotuj dane o swoich defibrylatorach AED w standardzie HeartSpot i opublikuj je na dane.gov.pl.">
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="vendor/leaflet.min.css">
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+  <a class="skip-link" href="#tresc">Przejdź do treści</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="HeartSpot – strona główna">
+      <img src="img/favicon.svg" alt="" width="32" height="32">
+      <span class="brand-name">HeartSpot</span>
+    </a>
+    <nav class="topnav" aria-label="Główna nawigacja">
+      <a href="./">Mapa</a>
+      <a href="dodaj.html" aria-current="page">Dodaj AED</a>
+      <a href="dane.html">Dane</a>
+    </nav>
+    <a class="call-112" href="tel:112"><span>Zadzwoń 112</span></a>
+  </header>
+
+  <main id="tresc" class="page">
+    <h1>Dodaj defibrylatory AED</h1>
+    <p>Masz AED w swojej instytucji, szkole lub firmie? Wpisz dane, a otrzymasz pliki zgodne ze
+      <a href="dane.html">wzorcowym zakresem danych</a> i Standardem technicznym dane.gov.pl, gotowe do publikacji
+      na portalu <a href="https://dane.gov.pl">dane.gov.pl</a>. Opublikowane dane trafią do mapy HeartSpot.</p>
+    <p class="hint">Dane zostają w Twojej przeglądarce – nic nie jest wysyłane. Dodane AED widzisz od razu na mapie na tym urządzeniu (jako niezweryfikowane); dla wszystkich pojawią się po publikacji na dane.gov.pl.</p>
+
+    <section aria-labelledby="h-form" class="add-section">
+      <h2 id="h-form">1. Dane urządzenia</h2>
+      <form id="aed-form" novalidate>
+        <fieldset>
+          <legend>Gdzie jest AED</legend>
+          <div class="grid2">
+            <div class="field span2">
+              <label for="nazwa_obiektu">Nazwa obiektu <span aria-hidden="true">*</span></label>
+              <input id="nazwa_obiektu" name="nazwa_obiektu" required placeholder="np. Szkoła Podstawowa nr 3">
+            </div>
+            <div class="field">
+              <label for="ulica_cecha">Cecha ulicy</label>
+              <select id="ulica_cecha" name="ulica_cecha">
+                <option value="ul.">ul.</option><option value="al.">al.</option><option value="pl.">pl.</option>
+                <option value="os.">os.</option><option value="rondo">rondo</option><option value="">(brak)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="ulica_nazwa">Ulica</label>
+              <input id="ulica_nazwa" name="ulica_nazwa" autocomplete="address-line1">
+            </div>
+            <div class="field">
+              <label for="nr_budynku">Nr budynku</label>
+              <input id="nr_budynku" name="nr_budynku">
+            </div>
+            <div class="field">
+              <label for="kod_pocztowy">Kod pocztowy</label>
+              <input id="kod_pocztowy" name="kod_pocztowy" placeholder="00-000" inputmode="numeric" autocomplete="postal-code">
+            </div>
+            <div class="field span2">
+              <label for="miejscowosc">Miejscowość <span aria-hidden="true">*</span></label>
+              <input id="miejscowosc" name="miejscowosc" required autocomplete="address-level2">
+            </div>
+          </div>
+          <p><button type="button" class="btn" id="btn-geocode">Znajdź adres na mapie</button>
+            <span id="geo-status" class="hint" role="status" aria-live="polite"></span></p>
+          <div id="pick-map" class="pick-map" role="region" aria-label="Mapa – kliknij, aby wskazać dokładne położenie AED"></div>
+          <p class="hint">Kliknij na mapie albo przeciągnij znacznik w miejsce, gdzie wisi urządzenie.
+            Współrzędne: <output id="coords-out">nie wskazano</output></p>
+          <div class="grid2">
+            <div class="field">
+              <label for="wewnatrz_budynku">Umieszczenie</label>
+              <select id="wewnatrz_budynku" name="wewnatrz_budynku">
+                <option value="">— wybierz —</option><option value="true">wewnątrz budynku</option>
+                <option value="false">na zewnątrz (np. szafka na elewacji)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="pietro">Piętro (0 = parter)</label>
+              <input id="pietro" name="pietro" type="number" step="1" min="-5" max="100">
+            </div>
+            <div class="field span2">
+              <label for="opis_lokalizacji">Jak znaleźć urządzenie</label>
+              <input id="opis_lokalizacji" name="opis_lokalizacji" placeholder="np. przy portierni, na prawo od wejścia głównego">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Kiedy jest dostępny</legend>
+          <div class="grid2">
+            <div class="field">
+              <label for="typ_dostepu">Kto ma dostęp <span aria-hidden="true">*</span></label>
+              <select id="typ_dostepu" name="typ_dostepu" required>
+                <option value="publiczny">każdy (publiczny)</option>
+                <option value="w_godzinach_obiektu">gdy obiekt jest otwarty</option>
+                <option value="ograniczony">po kontakcie z ochroną / na klucz</option>
+                <option value="prywatny">tylko pracownicy (niepubliczny)</option>
+                <option value="mobilny">w pojeździe</option>
+              </select>
+            </div>
+            <div class="field checkbox">
+              <input id="h24" type="checkbox"><label for="h24">Dostępny całą dobę (24/7)</label>
+            </div>
+          </div>
+          <div id="week-editor" class="week" role="group" aria-label="Godziny dostępności w poszczególne dni"></div>
+          <p><button type="button" class="btn btn-link" id="preset-weekdays">Wstaw: pn–pt 8:00–16:00</button></p>
+          <div class="grid2">
+            <div class="field checkbox">
+              <input id="szafka_zamknieta" name="szafka_zamknieta" type="checkbox"><label for="szafka_zamknieta">Szafka zamykana na kod lub klucz</label>
+            </div>
+            <div class="field">
+              <label for="telefon_dostep">Telefon w sprawie dostępu</label>
+              <input id="telefon_dostep" name="telefon_dostep" type="tel" placeholder="9 cyfr">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Urządzenie i dysponent</legend>
+          <div class="grid2">
+            <div class="field">
+              <label for="status">Stan</label>
+              <select id="status" name="status"><option value="aktywny">sprawny</option><option value="w_serwisie">w serwisie</option>
+                <option value="niesprawny">niesprawny</option></select>
+            </div>
+            <div class="field checkbox">
+              <input id="elektrody_pediatryczne" name="elektrody_pediatryczne" type="checkbox"><label for="elektrody_pediatryczne">Elektrody pediatryczne</label>
+            </div>
+            <div class="field"><label for="producent">Producent</label><input id="producent" name="producent"></div>
+            <div class="field"><label for="model">Model</label><input id="model" name="model"></div>
+            <div class="field"><label for="data_przegladu">Data ostatniego przeglądu</label><input id="data_przegladu" name="data_przegladu" type="date"></div>
+            <div class="field"><label for="data_waznosci_elektrod">Ważność elektrod</label><input id="data_waznosci_elektrod" name="data_waznosci_elektrod" type="date"></div>
+            <div class="field span2"><label for="dysponent_nazwa">Dysponent (instytucja) <span aria-hidden="true">*</span></label><input id="dysponent_nazwa" name="dysponent_nazwa" required></div>
+            <div class="field"><label for="dysponent_regon">REGON</label><input id="dysponent_regon" name="dysponent_regon" inputmode="numeric"></div>
+            <div class="field"><label for="dysponent_telefon">Telefon instytucji</label><input id="dysponent_telefon" name="dysponent_telefon" type="tel"></div>
+          </div>
+        </fieldset>
+
+        <div id="form-errors" class="errors" role="alert" tabindex="-1" hidden></div>
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="btn-add">Dodaj do listy</button>
+          <button type="reset" class="btn" id="btn-clear">Wyczyść formularz</button>
+        </div>
+        <p id="add-status" class="add-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section aria-labelledby="h-import" class="add-section">
+      <h2 id="h-import">albo wczytaj gotowy plik CSV</h2>
+      <p>Plik z nagłówkami zgodnymi ze <a href="dane/aed.schema.json">schematem</a> (np. pobrany z tej strony
+        lub przygotowany z <a href="dane/wzorcowy-zakres-danych-AED.xlsx">szablonu XLSX</a>). Sprawdzimy go
+        pod kątem wymagań wzorcowego zakresu danych.</p>
+      <label for="csv-file" class="btn">Wybierz plik CSV</label>
+      <input id="csv-file" type="file" accept=".csv,text/csv" class="visually-hidden">
+      <div id="import-report" role="status" aria-live="polite"></div>
+    </section>
+
+    <section aria-labelledby="h-list" class="add-section">
+      <h2 id="h-list">2. Twoja lista AED (<span id="count">0</span>)</h2>
+      <div class="table-wrap">
+        <table>
+          <caption class="visually-hidden">Wprowadzone defibrylatory</caption>
+          <thead><tr><th scope="col">Obiekt</th><th scope="col">Adres</th><th scope="col">Dostępność</th><th scope="col">Działania</th></tr></thead>
+          <tbody id="list"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-export" class="add-section">
+      <h2 id="h-export">3. Pobierz pliki i opublikuj na dane.gov.pl</h2>
+      <div class="grid2">
+        <div class="field">
+          <label for="licencja">Licencja danych</label>
+          <select id="licencja"><option value="CC0 1.0">CC0 1.0 (zalecana – bez ograniczeń)</option>
+            <option value="CC BY 4.0">CC BY 4.0 (z podaniem źródła)</option></select>
+        </div>
+        <div class="field span2">
+          <label for="csv-url">Adres (https://…), pod którym opublikujesz plik CSV</label>
+          <input id="csv-url" type="url" placeholder="https://www.twoja-instytucja.pl/otwarte-dane/aed.csv">
+        </div>
+      </div>
+      <div class="downloads">
+        <button type="button" class="btn btn-primary" id="dl-csv">Pobierz CSV</button>
+        <button type="button" class="btn" id="dl-geojson">Pobierz GeoJSON</button>
+        <button type="button" class="btn" id="dl-xml">Pobierz plik importu dane.gov.pl (XML)</button>
+      </div>
+      <p id="export-status" class="hint" role="status" aria-live="polite"></p>
+      <ol class="steps">
+        <li>Opublikuj plik CSV na stronie swojej instytucji (lub w BIP) pod stałym adresem.</li>
+        <li>Prześlij plik XML do dane.gov.pl jako źródło harwestera albo dodaj zbiór ręcznie w panelu dostawcy.</li>
+        <li>HeartSpot automatycznie dołączy Twoje AED do mapy po publikacji.</li>
+      </ol>
+    </section>
+  </main>
+
+  <script src="vendor/leaflet.min.js"></script>
+  <script src="dodaj.js?v=3"></script>
+  <script src="links.js?v=3"></script>
+</body>
+</html>

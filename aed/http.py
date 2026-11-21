@@ -15,7 +15,7 @@ from .config import RAW_DIR
 
 log = logging.getLogger(__name__)
 
-USER_AGENT = "misja-aed/0.1 (+https://github.com/; agregator otwartych danych AED)"
+USER_AGENT = "heartspot/0.1 (+https://github.com/; agregator otwartych danych AED)"
 
 
 def fetch_bytes(url: str, *, data: bytes | None = None, headers: dict[str, str] | None = None,

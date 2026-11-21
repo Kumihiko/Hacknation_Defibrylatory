@@ -19,7 +19,7 @@ from .sources import fetch_source
 log = logging.getLogger(__name__)
 
 RESOURCES = [
-    ("csv", "aed.csv", "CSV", "Zbiór w formacie CSV (UTF-8, RFC 4180) zgodny ze wzorcowym zakresem danych Misja AED."),
+    ("csv", "aed.csv", "CSV", "Zbiór w formacie CSV (UTF-8, RFC 4180) zgodny ze wzorcowym zakresem danych HeartSpot."),
     ("geojson", "aed.geojson", "GeoJSON", "Zbiór w formacie GeoJSON (WGS84) do wykorzystania w systemach GIS i mapach."),
     ("xlsx", "aed.xlsx", "XLSX", "Zbiór w formacie arkusza XLSX wraz z opisem pól i listą źródeł."),
 ]
@@ -129,7 +129,7 @@ def run(offline: bool = False, enable: list[str] | None = None) -> dict[str, Any
 def print_report(stats: dict[str, Any]) -> None:
     z = stats["zbior"]
     d = stats["deduplikacja"]
-    print("\n=== Misja AED – raport ===")
+    print("\n=== HeartSpot – raport ===")
     print(f"Wygenerowano: {stats['wygenerowano']}")
     print(f"Rekordy wejściowe: {d['rekordow_wejsciowych']}  ->  po deduplikacji: {d['rekordow_po_deduplikacji']}"
           f"  (połączono {d['polaczonych_klastrow']} klastrów)")
