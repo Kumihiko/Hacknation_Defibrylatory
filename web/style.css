@@ -67,6 +67,8 @@ a { color: var(--blue); }
 .drafts-note { background: var(--blue-bg); color: #1e3a8a; border-radius: 10px; padding: .5rem .8rem; margin: 0 0 .8rem; font-size: .92rem; }
 .drafts-note p { margin: 0 0 .2rem; font-weight: 700; }
 .drafts-note ul { margin: 0; padding-left: 1.1rem; }
+.loc-line { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem .6rem; margin: 0 0 .5rem; font-size: .95rem; }
+.loc-line .btn-link { min-height: 36px; padding: 0; }
 .status { margin: .25rem 0 .75rem; color: var(--muted); }
 .status.error { color: var(--red-dark); font-weight: 600; }
 

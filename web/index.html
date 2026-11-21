@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#b91c1c">
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="vendor/leaflet.min.css">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <a class="skip-link" href="#panel">Przejdź do wyników</a>
@@ -40,6 +40,10 @@
 
       <p id="status" class="status" role="status" aria-live="polite">Ustalam Twoją lokalizację…</p>
 
+      <p id="loc-line" class="loc-line" hidden>
+        <span>Twoje położenie: <strong id="loc-text"></strong></span>
+        <button id="btn-wrong-loc" class="btn btn-link" type="button">To nie tu? Wpisz adres</button>
+      </p>
       <p id="loc-warning" class="warning" role="alert" hidden></p>
       <div id="drafts-note" class="drafts-note" hidden></div>
 
@@ -93,7 +97,7 @@
   </main>
 
   <script src="vendor/leaflet.min.js"></script>
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=7"></script>
   <script src="links.js?v=3"></script>
 </body>
 </html>

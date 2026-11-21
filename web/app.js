@@ -371,6 +371,8 @@
   // ------------------------------------------------------------------ lokalizacja
   function setOrigin(latlng, how) {
     origin = latlng;
+    $('loc-line').hidden = false;
+    $('loc-text').textContent = how;
     clearRoute();
     scoredCache = [];
     $('alternatives').hidden = true;
@@ -394,8 +396,9 @@
     if (!accuracy || accuracy <= CFG.poorAccuracyM) { el.hidden = true; return; }
     el.hidden = false;
     el.textContent = `Lokalizacja jest niedokładna (±${fmtDist(accuracy)}) – telefon podał przybliżone położenie zamiast GPS, `
-      + 'więc wynik może być w złym miejscu. Włącz w telefonie lokalizację (GPS) i dla przeglądarki zgodę na '
-      + '„dokładną lokalizację”, potem kliknij „Użyj mojej lokalizacji”. Możesz też wpisać adres poniżej lub kliknąć na mapie.';
+      + 'więc wynik może być w złym miejscu (często przez sieć Wi-Fi lub operatora). Włącz w telefonie lokalizację (GPS) '
+      + 'i dla przeglądarki zgodę na „dokładną lokalizację”, potem kliknij „Użyj mojej lokalizacji”. '
+      + 'Najszybciej: wpisz adres poniżej lub kliknij swoje położenie na mapie.';
   }
 
   function locate() {
@@ -409,15 +412,21 @@
     const started = Date.now();
     setStatus('Ustalam Twoją lokalizację…');
 
-    const onFix = (pos) => {
+    let haveGpsFix = false;
+    const onFix = (pos, fromGps) => {
       if (session !== locateSession) return;
+      if (!fromGps && haveGpsFix) return; // szybki odczyt sieciowy nie nadpisuje odczytu z GPS
       const acc = pos.coords.accuracy;
       const ll = [pos.coords.latitude, pos.coords.longitude];
       if (bestFix) {
-        if (acc >= bestFix.coords.accuracy * 0.6) return; // nie jest wyraźnie dokładniejszy
         const moved = haversine(ll[0], ll[1], bestFix.coords.latitude, bestFix.coords.longitude);
-        if (moved < Math.max(50, acc)) { bestFix = pos; showAccuracyWarning(acc); return; } // to samo miejsce – nie przeliczamy
+        // odczyty sprzeczne (np. Wi-Fi „±20 m” w innym mieście vs GPS) – ufamy odczytowi z GPS
+        const inconsistent = moved > 3 * (acc + bestFix.coords.accuracy) + 200;
+        const moreAccurate = acc < bestFix.coords.accuracy * 0.6;
+        if (!(fromGps && inconsistent) && !moreAccurate) return;
+        if (!inconsistent && moved < Math.max(50, acc)) { bestFix = pos; showAccuracyWarning(acc); return; } // to samo miejsce
       }
+      if (fromGps) haveGpsFix = true;
       bestFix = pos;
       const how = acc <= 150 ? `GPS (±${Math.round(acc)} m)` : `przybliżone (±${fmtDist(acc)})`;
       setOrigin(ll, how);
@@ -426,10 +435,10 @@
     };
 
     // 1) natychmiast: ostatnie znane / sieciowe położenie (zwykle < 1 s), żeby od razu pokazać AED
-    navigator.geolocation.getCurrentPosition(onFix, () => {}, { enableHighAccuracy: false, maximumAge: 120000, timeout: 2500 });
+    navigator.geolocation.getCurrentPosition((pos) => onFix(pos, false), () => {}, { enableHighAccuracy: false, maximumAge: 120000, timeout: 2500 });
     // 2) równolegle GPS – jeśli przyjdzie dokładniejszy odczyt, poprawiamy położenie i trasę
     watchId = navigator.geolocation.watchPosition(
-      (pos) => { onFix(pos); if (session === locateSession && Date.now() - started > CFG.locateWatchMs) stopWatch(); },
+      (pos) => { onFix(pos, true); if (session === locateSession && Date.now() - started > CFG.locateWatchMs) stopWatch(); },
       (err) => {
         if (bestFix || session !== locateSession) return; // mamy już odczyt albo użytkownik wskazał miejsce sam
         stopWatch();
@@ -464,6 +473,13 @@
   async function main() {
     initMap();
     $('btn-relocate').addEventListener('click', locate);
+    $('btn-wrong-loc').addEventListener('click', () => {
+      stopWatch(); // nie pozwalamy, by spóźniony odczyt nadpisał poprawione położenie
+      const input = $('address');
+      input.scrollIntoView({ block: 'center', behavior: reducedMotion ? 'auto' : 'smooth' });
+      input.focus();
+      setStatus('Wpisz adres i naciśnij „Szukaj” albo kliknij swoje położenie na mapie.');
+    });
     $('btn-center').addEventListener('click', () => {
       if (current) map.setView([current.row[COL.lat], current.row[COL.lon]], 18, { animate: !reducedMotion });
     });
